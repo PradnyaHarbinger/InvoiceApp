@@ -48,8 +48,14 @@ var app = builder.Build();
 
 using (var scoped = app.Services.CreateScope())
 {
-    var seedUserPass = builder.Configuration.GetValue<string>("SeedUserPassword");
     var services = scoped.ServiceProvider;
+
+    //if you don't have a database when hosting it will be created
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+
+    var seedUserPass = builder.Configuration.GetValue<string>("SeedUserPassword");
+    
     await SeedData.Initialize(services, seedUserPass);
 }
 

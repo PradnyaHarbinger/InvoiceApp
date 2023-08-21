@@ -81,7 +81,7 @@ namespace InvoiceApp.Pages.Invoices
 
             await Context.SaveChangesAsync();
 
-            return RedirectToAction("./Index");
+            return RedirectToPage("/Invoices/Index");
         }
     }
 }
