@@ -33,5 +33,33 @@ namespace InvoiceApp.Data
 
             return user.Id;
         }
+
+        public static async Task<IdentityResult> EnsureRole(
+            IServiceProvider serviceProvider,
+            string uid, string role)
+        {
+            var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+
+            IdentityResult ir;
+
+            if(await roleManager.RoleExistsAsync(role) == false) // if thi specific role does not exist
+            {
+                ir = await roleManager.CreateAsync(new IdentityRole(role));
+            }
+
+            var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
+
+
+            var user = await userManager.FindByIdAsync(uid);
+
+            if(user == null)
+            {
+                throw new Exception("User not existing");
+            }
+
+            ir = await userManager.AddToRoleAsync(user, role);
+
+            return ir;
+        }
     }
 }
