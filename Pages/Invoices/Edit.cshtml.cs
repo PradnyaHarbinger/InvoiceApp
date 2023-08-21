@@ -57,11 +57,6 @@ namespace InvoiceApp.Pages.Invoices
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            /*if (!ModelState.IsValid)
-            {
-                return Page();
-            }*/
-
             // adding custom authorization i.e. if the user is able to get access to any form which is not of it
             // we should block him from doing that action
             var invoice = await Context.Invoice.AsNoTracking().SingleOrDefaultAsync(m => m.InvoiceId == id);
@@ -80,6 +75,8 @@ namespace InvoiceApp.Pages.Invoices
             {
                 return Forbid();
             }
+
+            //Invoice.Status = invoice.Status;
 
             Context.Attach(Invoice).State = EntityState.Modified;
 
