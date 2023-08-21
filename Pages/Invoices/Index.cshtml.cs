@@ -32,9 +32,11 @@ namespace InvoiceApp.Pages.Invoices
                 var invoice = from i in Context.Invoice
                               select i;
                 var isManager = User.IsInRole(Constants.InvoiceManagerRole);  // for checking role is manager or not
+                var isAdmin = User.IsInRole(Constants.InvoiceAdminRole);  // for checking role is admin or not
+
                 var currentUserId = UserManager.GetUserId(User);  // for checking is invoice owner or not
 
-                if (!isManager)
+                if (!isManager && !isAdmin)
                 {
                     invoice = invoice.Where(i => i.CreatorId == currentUserId);
                 }

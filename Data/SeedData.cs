@@ -16,6 +16,10 @@ namespace InvoiceApp.Data
                 // manager
                 var managerUid = await EnsureUser(serviceProvider, "manager@demo.com", password);
                 await EnsureRole(serviceProvider, managerUid, Constants.InvoiceManagerRole);
+
+                // admin - administration
+                var adminUid = await EnsureUser(serviceProvider, "admin@demo.com", password);
+                await EnsureRole(serviceProvider, adminUid, Constants.InvoiceAdminRole);
             }
         }
         private static async Task<string> EnsureUser(

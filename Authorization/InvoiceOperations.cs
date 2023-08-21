@@ -34,6 +34,7 @@ namespace InvoiceApp.Authorization
         public static readonly string RejectedOperationName = "Rejected";
 
         public static readonly string InvoiceManagerRole = "InvoiceManager";
+        public static readonly string InvoiceAdminRole = "InvoiceAdmin";
 
     }
 }

@@ -41,6 +41,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IAuthorizationHandler, InvoiceCreatorAuthorizationHandler>(); // now we can use this using DI
 builder.Services.AddSingleton<IAuthorizationHandler, InvoiceManagerAuthorizationHandler>(); // singleton cz we want only 1 instance and we are also not using EF core for this purpose
+builder.Services.AddSingleton<IAuthorizationHandler, InvoiceAdminAuthorizationHandler>(); // singleton as we want only 1 instance --||--
 
 var app = builder.Build();
 
