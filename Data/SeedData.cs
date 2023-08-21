@@ -8,7 +8,7 @@ namespace InvoiceApp.Data
     {
         public static async Task Initialize(
             IServiceProvider serviceProvider,
-            string password = "Test@12345")
+            string password)
         {
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))

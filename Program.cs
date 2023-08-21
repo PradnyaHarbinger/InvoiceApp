@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using InvoiceApp.Authorization;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +48,9 @@ var app = builder.Build();
 
 using (var scoped = app.Services.CreateScope())
 {
+    var seedUserPass = builder.Configuration.GetValue<string>("SeedUserPassword");
     var services = scoped.ServiceProvider;
-    await SeedData.Initialize(services);
+    await SeedData.Initialize(services, seedUserPass);
 }
 
 // Configure the HTTP request pipeline.
