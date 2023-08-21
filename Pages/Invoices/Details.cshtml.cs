@@ -43,15 +43,45 @@ namespace InvoiceApp.Pages.Invoices
                 Invoice = invoice;
             }
 
-            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+            var isCreator = await AuthorizationService.AuthorizeAsync(
                 User, Invoice, InvoiceOperations.Read);
 
-            if(!isAuthorized.Succeeded)
+            var isManager = User.IsInRole(Constants.InvoiceManagerRole);
+
+            if(!isCreator.Succeeded && !isManager)
             {
                 return Forbid();
             }
 
+
+
+
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync(int id, InvoiceStatus status)
+        {
+            Invoice = await Context.Invoice.FindAsync(id);
+
+            if(Invoice == null)
+                return NotFound();
+
+            var invoiceOperation = status == InvoiceStatus.Approved ? InvoiceOperations.Approved : InvoiceOperations.Rejected;
+
+            var isAuthorize = await AuthorizationService.AuthorizeAsync(
+                User, Invoice, invoiceOperation);
+
+            if(!isAuthorize.Succeeded)
+            {
+                return Forbid();
+            }
+
+            Invoice.Status = status;
+            Context.Invoice.Update(Invoice);
+
+            await Context.SaveChangesAsync();
+
+            return RedirectToAction("./Index");
         }
     }
 }
