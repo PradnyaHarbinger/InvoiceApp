@@ -1,12 +1,26 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using InvoiceApp.Authorization;
 
 namespace InvoiceApp.Data
 {
     public class SeedData
     {
+        public static async Task Initialize(
+            IServiceProvider serviceProvider,
+            string password = "Test@12345")
+        {
+            using (var context = new ApplicationDbContext(
+                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+            {
+                // manager
+                var managerUid = await EnsureUser(serviceProvider, "manager@demo.com", password);
+                await EnsureRole(serviceProvider, managerUid, Constants.InvoiceManagerRole);
+            }
+        }
         private static async Task<string> EnsureUser(
             IServiceProvider serviceProvider,
-            string initPw, string userName)
+            string userName, string initPw)
         {
             var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
 
@@ -34,7 +48,7 @@ namespace InvoiceApp.Data
             return user.Id;
         }
 
-        public static async Task<IdentityResult> EnsureRole(
+        private static async Task<IdentityResult> EnsureRole(
             IServiceProvider serviceProvider,
             string uid, string role)
         {

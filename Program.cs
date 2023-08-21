@@ -44,6 +44,12 @@ builder.Services.AddSingleton<IAuthorizationHandler, InvoiceManagerAuthorization
 
 var app = builder.Build();
 
+using (var scoped = app.Services.CreateScope())
+{
+    var services = scoped.ServiceProvider;
+    await SeedData.Initialize(services);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
